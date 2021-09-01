@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.EmplDAO">
+    <cache type="com.demo.cache.RedisCache"></cache>
+
+    <insert id="add" parameterType="Employee" useGeneratedKeys="true" keyProperty="emplId">
+        insert into employee(empl_id,company_id,empl_name,empl_sex,empl_email,empl_tel,age,salary,position)
+        values (#{emplId},#{companyId},#{emplName},#{emplSex},#{emplEmail},#{emplTel},#{age},#{salary},#{position})
+    </insert>
+    <update id="update" parameterType="Employee">
+        update employee
+        set resu_id=#{resuId},empl_name=#{emplName},empl_sex=#{emplSex},empl_email=#{emplEmail},empl_tel=#{emplTel},age=#{age},salary=#{salary},position=#{position}
+        where empl_id=#{emplId}
+    </update>
+    <delete id="delete" parameterType="int">
+        delete from employee where empl_id = #{id}
+    </delete>
+    <select id="findByCompId" parameterType="String" resultType="Employee">
+        select e.company_id,e.empl_id,e.resu_id,e.empl_name,e.empl_sex,e.empl_email,e.empl_tel,e.age,e.salary,e.position,c.company_name
+        from employee e,company c
+        where e.company_id=c.company_id
+        and c.company_id=#{id}
+    </select>
+    <select id="findOther" parameterType="String" resultType="Employee">
+        select e.company_id,e.empl_id,e.resu_id,e.empl_name,e.empl_sex,e.empl_email,e.empl_tel,e.age,e.salary,e.position,c.company_name
+        from employee e,company c
+        where e.company_id=c.company_id
+        and c.company_id!=#{id}
+    </select>
+    <update id="recruitEmployee" parameterType="String">
+        update employee
+        set company_id=#{compId}
+        where empl_id=#{emplId}
+    </update>
+    <update id="dismissEmployee" parameterType="int">
+        update employee
+        set company_id='0',salary=0,position='待业'
+        where empl_id=#{id}
+    </update>
+    <update id="setNULL" parameterType="int">
+        update employee
+        set resu_id=null
+        where empl_id=#{id}
+    </update>
+    <select id="getById" parameterType="int" resultType="Employee">
+        select e.company_id,e.empl_id,e.resu_id,e.empl_name,e.empl_sex,e.empl_email,e.empl_tel,e.age,e.salary,e.position,c.company_name,r.content
+        from employee e,company c,resume r
+        where e.company_id=c.company_id
+        and e.empl_id=r.empl_id
+        and e.empl_id=#{id}
+    </select>
+    <select id="checkById" parameterType="int" resultType="Employee">
+        select *
+        from employee
+        where empl_id=#{id}
+    </select>
+    <select id="findAll" resultType="Employee">
+        select *
+        from employee,company
+        where employee.company_id = company.company_id
+    </select>
+</mapper>

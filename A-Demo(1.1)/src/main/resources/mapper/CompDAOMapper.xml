@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.CompDAO">
+    <cache type="com.demo.cache.RedisCache"></cache>
+    <insert id="addUnemployed">
+        insert into company(company_id,company_name)
+        values('0','无公司')
+    </insert>
+    <insert id="register" parameterType="Company">
+        insert into company(company_id,company_name,company_pwd,company_email,company_tel)
+        values(#{companyId},#{companyName},#{companyPwd},#{companyEmail},#{companyTel})
+    </insert>
+    <delete id="deleteCompany" parameterType="String">
+        delete from company where company_id=#{id}
+    </delete>
+    <select id="getById" parameterType="String" resultType="Company">
+        select company_id,company_name,company_pwd,company_email,company_tel
+        from company
+        where company_id =#{id}
+    </select>
+    <select id="findAll" resultType="Company">
+        select *
+        from company
+    </select>
+    <update id="updatePwd" parameterType="Company">
+        update company set company_pwd = #{pwd} where company_id=#{id}
+    </update>
+    <update id="update" parameterType="Company">
+        update company
+        set company_name=#{companyName},company_email=#{companyEmail},company_tel=#{companyTel}
+        where company_id=#{companyId}
+    </update>
+</mapper>

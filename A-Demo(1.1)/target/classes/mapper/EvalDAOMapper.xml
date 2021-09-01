@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.EvalDAO">
+    <insert id="addEval" parameterType="Company">
+        insert into evaluate(company_id,resu_id,eval_content)
+        values(#{companyId},#{resuId},#{evalContent})
+    </insert>
+    <delete id="deleteEvalById" parameterType="int">
+        delete from evaluate where eval_id=#{id}
+    </delete>
+    <delete id="deleteEvalByCompId" parameterType="String">
+        delete from evaluate where company_id=#{id}
+    </delete>
+    <delete id="deleteEvalByEmplId" parameterType="int">
+        delete evaluate from evaluate,resume
+        where evaluate.resu_id=resume.resu_id
+        and resume.empl_id=#{id}
+    </delete>
+    <select id="findByEmplId" parameterType="int" resultType="Evaluate">
+        select * from evaluate,company,resume
+        where evaluate.resu_id=resume.resu_id
+        and resume.empl_id=#{id}
+        and evaluate.company_id = company.company_id
+    </select>
+    <select id="selectEvalById" parameterType="int" resultType="Evaluate">
+        select * from evaluate where eval_id=#{id}
+    </select>
+</mapper>
